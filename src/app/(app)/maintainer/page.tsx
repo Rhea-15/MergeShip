@@ -22,6 +22,7 @@ import { isOk } from '@/lib/result';
 import RefreshButton from './refresh-button';
 import CiStatusBadge from './ci-status-badge';
 import AnalyticsTrends from './analytics-trends';
+import { VerifyButton } from '../issues/verify-button';
 import ExportCsvButton from './export-csv-button';
 
 export const dynamic = 'force-dynamic';
@@ -337,7 +338,7 @@ export default async function MaintainerPage({
                     <span>{relativeTime(r.githubUpdatedAt)}</span>
                   </div>
                 </div>
-                {r.mentorVerified && (
+                {r.mentorVerified ? (
                   <span className="shrink-0 rounded-full bg-emerald-900/40 px-2.5 py-0.5 text-xs font-medium text-emerald-300 ring-1 ring-emerald-700/40">
                     ✓ Mentor verified
                     {r.mentorReviewerHandle && (
@@ -347,6 +348,13 @@ export default async function MaintainerPage({
                       </span>
                     )}
                   </span>
+                ) : (
+                  r.authorUserId !== user.id &&
+                  r.state === 'open' && (
+                    <div className="shrink-0">
+                      <VerifyButton prId={r.id} />
+                    </div>
+                  )
                 )}
               </li>
             ))}
