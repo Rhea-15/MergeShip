@@ -650,9 +650,13 @@ export async function getPrCiStatus(
   repoFullName: string,
   prNumber: number,
 ): Promise<Result<'passing' | 'failing' | 'pending' | null>> {
-  const authRes = await requireMaintainer();
+  const authRes = await requireMaintainer({ requireService: true });
   if (!authRes.ok) return authRes;
-  const { user } = authRes.data;
+  const { user, service } = authRes.data;
+
+  if (!(await assertMaintainerInstall(service, user.id, installationId))) {
+    return err('not_authorised', 'not your install');
+  }
 
   const cacheKey = `ci:status:${repoFullName}:${prNumber}`;
   const cached = await cacheGet<'passing' | 'failing' | 'pending' | null>(cacheKey);
