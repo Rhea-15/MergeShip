@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PRBreadcrumb } from './breadcrumb';
 import { notFound, redirect } from 'next/navigation';
 import { getServerSupabase } from '@/lib/supabase/server';
 import { isUserMaintainer } from '@/lib/maintainer/detect';
@@ -97,6 +98,12 @@ export default async function PrDetailPage({ params }: { params: Promise<{ id: s
             <ArrowLeft className="h-4 w-4" /> Back to PR Queue
           </Link>
         </div>
+
+        <PRBreadcrumb
+          repoFullName={pr.repoFullName}
+          prNumber={pr.number}
+          installationId={pr.installationId!}
+        />
 
         {/* Layout grid */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
